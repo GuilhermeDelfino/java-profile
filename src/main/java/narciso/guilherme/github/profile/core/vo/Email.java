@@ -1,20 +1,15 @@
 package narciso.guilherme.github.profile.core.vo;
 
-public class Email {
-  private final String value;
+public record Email(String value) {
 
-  public Email(String value) throws IllegalAccessException {
-    validateEmail(value);
-    this.value = value;
-  }
+  private static final String EMAIL_REGEX = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
 
-  private void validateEmail(String value) throws IllegalAccessException {
-    if(value.isBlank()) { // TODO: Add more validations later
-      throw new IllegalAccessException("");
+  public Email {
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException("Email must not be blank");
     }
-  }
-
-  public String getValue() {
-    return value;
+    if (!value.matches(EMAIL_REGEX)) {
+      throw new IllegalArgumentException("Invalid email format: " + value);
+    }
   }
 }
