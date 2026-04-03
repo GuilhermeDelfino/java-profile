@@ -1,0 +1,39 @@
+name: Deploy VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+
+          script: |
+            set -e
+
+            echo "🚀 Starting deployment..."
+
+            cd /root/projects/java-profile
+
+            echo "📥 Updating code..."
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "🧹 Cleaning unused Docker resources..."
+            docker system prune -f
+
+            echo "🐳 Building and starting containers..."
+            docker compose -f docker-compose.prod.yml up -d --build
+
+            echo "✅ Deployment completed successfully!"

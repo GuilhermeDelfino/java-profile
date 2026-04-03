@@ -3,6 +3,8 @@ package narciso.guilherme.github.profile.core.service;
 import narciso.guilherme.github.profile.core.entity.User;
 import narciso.guilherme.github.profile.core.output.SaveImage;
 import narciso.guilherme.github.profile.core.output.UserRepository;
+import narciso.guilherme.github.profile.core.vo.Email;
+import narciso.guilherme.github.profile.core.vo.Phone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,8 +65,8 @@ class UserServiceTest {
   @Test
   void shouldReturnUserById() {
     UUID id = UUID.randomUUID();
-    User user = new User(id, "Alice", new narciso.guilherme.github.profile.core.vo.Phone("11987654321"),
-        "https://bucket/img.jpg", new narciso.guilherme.github.profile.core.vo.Email("user@example.com"), "encoded");
+    User user = new User(id, "Alice", new Phone("11987654321"),
+        "https://bucket/img.jpg", new Email("user@example.com"), "encoded");
     when(userRepository.findUser(id)).thenReturn(Optional.of(user));
 
     Optional<User> result = userService.findById(id);
@@ -86,8 +88,8 @@ class UserServiceTest {
   @Test
   void shouldReturnPagedUsers() {
     List<User> users = List.of(
-        new User(UUID.randomUUID(), "Alice", new narciso.guilherme.github.profile.core.vo.Phone("11987654321"),
-            "https://bucket/img.jpg", new narciso.guilherme.github.profile.core.vo.Email("alice@example.com"), "encoded")
+        new User(UUID.randomUUID(), "Alice", new Phone("11987654321"),
+            "https://bucket/img.jpg", new Email("alice@example.com"), "encoded")
     );
     when(userRepository.findAllPaginated(0, 10)).thenReturn(users);
 
