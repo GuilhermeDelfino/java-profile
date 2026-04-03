@@ -11,13 +11,24 @@ public class User {
   private final Phone phone;
   private final String profilePictureUrl;
   private final Email email;
+  private final String password;
 
-  public User(String name, Phone phone, String profilePictureUrl, Email email) {
+  public User(String name, Phone phone, String profilePictureUrl, Email email, String password) {
     this.id = UUID.randomUUID();
     this.name = name;
     this.phone = phone;
     this.profilePictureUrl = profilePictureUrl;
     this.email = email;
+    this.password = password;
+  }
+
+  public User(UUID id, String name, Phone phone, String profilePictureUrl, Email email, String password) {
+    this.id = id;
+    this.name = name;
+    this.phone = phone;
+    this.profilePictureUrl = profilePictureUrl;
+    this.email = email;
+    this.password = password;
   }
 
   public UUID getId() {
@@ -38,5 +49,9 @@ public class User {
 
   public Email getEmail() {
     return email;
+  }
+
+  public String getPassword() {
+    return password;
   }
 }

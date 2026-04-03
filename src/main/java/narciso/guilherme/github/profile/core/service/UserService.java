@@ -3,9 +3,12 @@ package narciso.guilherme.github.profile.core.service;
 import narciso.guilherme.github.profile.core.entity.User;
 import narciso.guilherme.github.profile.core.output.SaveImage;
 import narciso.guilherme.github.profile.core.output.UserRepository;
+import narciso.guilherme.github.profile.core.vo.Email;
+import narciso.guilherme.github.profile.core.vo.Phone;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,16 +22,37 @@ public class UserService {
     this.saveImage = saveImage;
   }
 
-  public User save(User user) {
+  @Transactional
+  public User save(
+    String name,
+    String phone,
+    String email,
+    String encodedPassword,
+    InputStream image,
+    long imageContentLength,
+    String imageContentType
+  ) {
+
+    if (userRepository.existsByEmail(email)) {
+      throw new IllegalStateException("Email already in use: " + email);
+    }
+    Phone phoneVo = new Phone(phone);
+    Email emailVo = new Email(email);
+    String urlProfilePicture = saveImage.save(image, imageContentLength, imageContentType);
+    User user = new User(name, phoneVo, urlProfilePicture, emailVo, encodedPassword);
+    userRepository.createUser(user);
     return user;
   }
 
   public Optional<User> findById(UUID id) {
-    return Optional.empty();
+    return userRepository.findUser(id);
   }
 
-  public Collection<User> findAllPageable() {
-    return Collections.emptyList();
+  public Collection<User> findAllPageable(int page, int size) throws IllegalArgumentException {
+    if (page < 0 || size <= 0) {
+      throw new IllegalArgumentException("Page and size must be greater than 0");
+    }
+    return userRepository.findAllPaginated(page, size);
   }
 
 }

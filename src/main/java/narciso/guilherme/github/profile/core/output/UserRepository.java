@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
-  User createUser(User user);
-  Optional<User> findUser(UUID id);
-  Collection<User> findAll();
-//  Collection<User> findAllPaginated(); // TODO:
+  void createUser(User user);
+  boolean existsByEmail(String email);
+  Optional<User> findUser(UUID id) throws IllegalArgumentException;
+  Collection<User> findAllPaginated(int page, int size) throws IllegalArgumentException;
 }
