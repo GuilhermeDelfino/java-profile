@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>26</java.version>
+		<aws.sdk.version>2.29.52</aws.sdk.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<springdoc.version>3.0.2</springdoc.version>
 		<spotless.version>2.44.0</spotless.version>
@@ -78,6 +79,13 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- AWS -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>${aws.sdk.version}</version>
 		</dependency>
 
 		<!-- Documentation -->

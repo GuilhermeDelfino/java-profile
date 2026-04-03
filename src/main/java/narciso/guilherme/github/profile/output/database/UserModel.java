@@ -16,12 +16,18 @@ public class UserModel {
   private String phone;
   @Column(length = 120)
   private String email;
+  @Column(length = 500)
+  private String profilePictureUrl;
+  @Column(nullable = false)
+  private String password;
 
-  public UserModel(UUID id, String name, String phone, String email) {
+  public UserModel(UUID id, String name, String phone, String email, String profilePictureUrl, String password) {
     this.id = id;
     this.name = name;
     this.phone = phone;
     this.email = email;
+    this.profilePictureUrl = profilePictureUrl;
+    this.password = password;
   }
 
   public UserModel() {
@@ -57,5 +63,21 @@ public class UserModel {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getProfilePictureUrl() {
+    return profilePictureUrl;
+  }
+
+  public void setProfilePictureUrl(String profilePictureUrl) {
+    this.profilePictureUrl = profilePictureUrl;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }
