@@ -20,7 +20,7 @@ CRUD de perfis de usuário com autenticação JWT, upload de imagens via S3, obs
 | Category | Technology |
 |---|---|
 | Framework | Spring Boot 4.0.5 |
-| Language | Java 26 |
+| Language | Java 24 |
 | Database | PostgreSQL + Spring Data JPA |
 | Cache | Redis |
 | Security | Spring Security + JWT |
@@ -35,7 +35,7 @@ CRUD de perfis de usuário com autenticação JWT, upload de imagens via S3, obs
 
 ### Prerequisites
 
-- Java 26
+- Java 24
 - Docker & Docker Compose
 - Maven
 
@@ -49,11 +49,27 @@ docker compose up -d
 ./mvnw spring-boot:run
 ```
 
+### Environment Variables
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `DB_HOST` | No | `localhost` | PostgreSQL host |
+| `DB_PORT` | No | `5432` | PostgreSQL port |
+| `DB_NAME` | No | `profile` | Database name |
+| `DB_USERNAME` | No | `profile` | Database user |
+| `DB_PASSWORD` | No | `profile` | Database password |
+| `REDIS_HOST` | No | `localhost` | Redis host |
+| `REDIS_PORT` | No | `6379` | Redis port |
+| `JWT_SECRET` | No | *(dev default)* | JWT signing secret |
+| `JWT_EXPIRATION_MS` | No | `86400000` | Token expiration (ms) |
+| `AWS_S3_BUCKET` | **Yes** | — | S3 bucket name |
+| `AWS_REGION` | **Yes** | — | AWS region |
+
 ### API Docs
 
 After startup, access the Swagger UI at:
 ```
-http://localhost:8080/swagger-ui.html
+http://localhost:8080/java-profile/swagger-ui.html
 ```
 
 ### Metrics
