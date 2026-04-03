@@ -94,6 +94,8 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
       GF_SERVER_ROOT_URL: https://api.guilherme-narciso.dev/grafana
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      GF_DATE_FORMATS_DEFAULT_TIMEZONE: UTC
+      GF_LOCALE: en-US
     volumes:
       - grafana_data:/var/lib/grafana
     depends_on:

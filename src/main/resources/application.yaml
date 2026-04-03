@@ -42,7 +42,9 @@ management:
   endpoint:
     health:
       show-details: when-authorized
-
+  metrics:
+    tags:
+      application: java-profile
 jwt:
   secret: ${JWT_SECRET:dGhpcy1pcy1hLXNlY3JldC1rZXktZm9yLWRldi1vbmx5LTMyYnl0ZXM=}
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
