@@ -1,6 +1,8 @@
 package narciso.guilherme.github.profile.core.vo;
 
-public record Email(String value) {
+import java.io.Serializable;
+
+public record Email(String value) implements Serializable {
 
   private static final String EMAIL_REGEX = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
 
