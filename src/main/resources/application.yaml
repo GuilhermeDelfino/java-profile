@@ -3,15 +3,6 @@ server:
     context-path: /java-profile
   forward-headers-strategy: framework
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-  servers:
-    - url: https://api.guilherme-narciso.dev
-      description: Prod
-    - url: http://localhost:8080
-      description: Local
-
 spring:
   application:
     name: profile
@@ -33,12 +24,10 @@ spring:
       port: ${REDIS_PORT:6379}
 
 logging:
-  structured:
-    format:
-      console: logstash
-      file: logstash
   file:
     name: logs/app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
   logback:
     rollingpolicy:
       max-file-size: 10MB
