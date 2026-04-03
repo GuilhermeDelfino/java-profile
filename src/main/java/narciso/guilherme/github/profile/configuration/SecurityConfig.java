@@ -25,6 +25,7 @@ public class SecurityConfig {
   private static final String[] PUBLIC_ROUTES = {
     "/auth/**",
     "/docs",
+    "/swagger-ui.html",
     "/swagger-ui/**",
     "/v3/api-docs/**",
     "/webjars/**",

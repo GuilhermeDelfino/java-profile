@@ -2,6 +2,7 @@ package narciso.guilherme.github.profile.input;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import narciso.guilherme.github.profile.core.service.UserService;
@@ -50,6 +51,7 @@ public class UserController {
   @Operation(summary = "Find user by ID")
   @ApiResponse(responseCode = "200", description = "User found")
   @ApiResponse(responseCode = "404", description = "User not found")
+  @SecurityRequirement(name = "bearerAuth")
   public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
     return userService
       .findById(id)
@@ -61,6 +63,7 @@ public class UserController {
   @GetMapping
   @Operation(summary = "List users with pagination")
   @ApiResponse(responseCode = "200", description = "Users listed successfully")
+  @SecurityRequirement(name = "bearerAuth")
   public ResponseEntity<Collection<UserResponse>> findAll(
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "20") int size) {
