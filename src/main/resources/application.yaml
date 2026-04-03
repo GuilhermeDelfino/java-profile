@@ -3,6 +3,15 @@ server:
     context-path: /java-profile
   forward-headers-strategy: framework
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  servers:
+    - url: https://api.guilherme-narciso.dev
+      description: Prod
+    - url: http://localhost:8080
+      description: Local
+
 spring:
   application:
     name: profile
