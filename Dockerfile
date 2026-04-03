@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- Build ----
-FROM eclipse-temurin:26-jdk AS builder
+FROM eclipse-temurin:24-jdk AS builder
 WORKDIR /app
 
 COPY mvnw .
@@ -17,13 +17,13 @@ RUN --mount=type=cache,target=/root/.m2 \
     ./mvnw package -DskipTests -q
 
 # ---- Layer extraction ----
-FROM eclipse-temurin:26-jdk AS layers
+FROM eclipse-temurin:24-jdk AS layers
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
 # ---- Runtime ----
-FROM eclipse-temurin:26-jre
+FROM eclipse-temurin:24-jre
 WORKDIR /app
 
 RUN addgroup --system spring && adduser --system --ingroup spring spring
