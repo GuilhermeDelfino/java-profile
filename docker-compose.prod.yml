@@ -3,6 +3,8 @@ services:
     build: .
     restart: unless-stopped
     network_mode: host
+    mem_limit: 768m
+    cpus: 0.5
     environment:
       DB_HOST: localhost
       DB_PORT: 5432
@@ -16,13 +18,12 @@ services:
       AWS_REGION: ${AWS_REGION}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: 5
+      SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE: 1
+      SERVER_TOMCAT_THREADS_MAX: 30
     volumes:
       - ./logs:/app/logs
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
     depends_on:
       - postgres
       - redis
@@ -31,6 +32,15 @@ services:
     image: postgres:17
     restart: unless-stopped
     network_mode: host
+    mem_limit: 1536m
+    command: >
+      postgres
+      -c shared_buffers=512MB
+      -c effective_cache_size=1GB
+      -c work_mem=8MB
+      -c maintenance_work_mem=128MB
+      -c max_connections=50
+    cpus: 1.0
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
@@ -42,6 +52,9 @@ services:
     image: redis:8
     restart: unless-stopped
     network_mode: host
+    mem_limit: 256m
+    cpus: 0.3
+    command: ["redis-server", "--maxmemory", "200mb", "--maxmemory-policy", "allkeys-lru"]
     volumes:
       - redis_data:/data
 
@@ -49,6 +62,8 @@ services:
     image: prom/node-exporter:v1.8.2
     restart: unless-stopped
     network_mode: host
+    mem_limit: 128m
+    cpus: 0.2
     pid: host
     volumes:
       - /proc:/host/proc:ro
@@ -58,12 +73,13 @@ services:
       - --path.procfs=/host/proc
       - --path.sysfs=/host/sys
       - --path.rootfs=/rootfs
-      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
 
   prometheus:
     image: prom/prometheus:v2.53.4
     restart: unless-stopped
     network_mode: host
+    mem_limit: 256m
+    cpus: 0.3
     volumes:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -72,6 +88,8 @@ services:
     image: grafana/grafana:11.6.1
     restart: unless-stopped
     network_mode: host
+    mem_limit: 512m
+    cpus: 0.3
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
       GF_SERVER_ROOT_URL: https://api.guilherme-narciso.dev/grafana
@@ -86,4 +104,3 @@ volumes:
   redis_data:
   prometheus_data:
   grafana_data:
-
