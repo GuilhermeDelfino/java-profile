@@ -71,6 +71,12 @@ class UserControllerIT extends AbstractIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(id))
         .andExpect(jsonPath("$.email").value("findbyid@example.com"));
+
+    mockMvc.perform(get("/users/" + id)
+            .header("Authorization", "Bearer " + token))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(id))
+        .andExpect(jsonPath("$.email").value("findbyid@example.com"));
   }
 
   @Test
@@ -91,6 +97,11 @@ class UserControllerIT extends AbstractIntegrationTest {
   @Test
   void shouldListUsers() throws Exception {
     String token = createUserAndGetToken("list@example.com");
+
+    mockMvc.perform(get("/users")
+            .header("Authorization", "Bearer " + token))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray());
 
     mockMvc.perform(get("/users")
             .header("Authorization", "Bearer " + token))

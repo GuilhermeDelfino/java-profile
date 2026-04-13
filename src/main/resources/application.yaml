@@ -23,16 +23,8 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
 
-logging:
-  file:
-    name: logs/app.log
-  pattern:
-    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n"
-  logback:
-    rollingpolicy:
-      max-file-size: 10MB
-      max-history: 30
-      clean-history-on-start: false
+loki:
+  url: ${LOKI_URL:http://localhost:3100}
 
 management:
   endpoints:

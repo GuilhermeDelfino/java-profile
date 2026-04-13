@@ -1,5 +1,7 @@
 package narciso.guilherme.github.profile.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import narciso.guilherme.github.profile.core.vo.Email;
 import narciso.guilherme.github.profile.core.vo.Phone;
 
@@ -27,7 +29,14 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public User(UUID id, String name, Phone phone, String profilePictureUrl, Email email, String password) {
+  @JsonCreator
+  public User(
+      @JsonProperty("id") UUID id,
+      @JsonProperty("name") String name,
+      @JsonProperty("phone") Phone phone,
+      @JsonProperty("profilePictureUrl") String profilePictureUrl,
+      @JsonProperty("email") Email email,
+      @JsonProperty("password") String password) {
     this.id = id;
     this.name = name;
     this.phone = phone;

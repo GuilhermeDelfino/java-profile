@@ -1,0 +1,76 @@
+{
+  "title": "Application Logs",
+  "uid": "java-profile-logs",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "timezone": "UTC",
+  "tags": ["java-profile", "logs"],
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "level",
+        "label": "Level",
+        "type": "custom",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "query": "All : .*,INFO : INFO,WARN : WARN,ERROR : ERROR,DEBUG : DEBUG",
+        "current": { "selected": true, "text": "All", "value": ".*" },
+        "options": [
+          { "selected": true, "text": "All", "value": ".*" },
+          { "selected": false, "text": "INFO", "value": "INFO" },
+          { "selected": false, "text": "WARN", "value": "WARN" },
+          { "selected": false, "text": "ERROR", "value": "ERROR" },
+          { "selected": false, "text": "DEBUG", "value": "DEBUG" }
+        ]
+      },
+      {
+        "name": "search",
+        "label": "Search",
+        "type": "textbox",
+        "hide": 0,
+        "current": { "selected": false, "text": "", "value": "" },
+        "query": ""
+      },
+      {
+        "name": "request_id",
+        "label": "Request ID",
+        "type": "textbox",
+        "hide": 0,
+        "current": { "selected": false, "text": "", "value": "" },
+        "query": ""
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "logs",
+      "title": "Logs",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 25 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "sortOrder": "Descending",
+        "maxLines": 20
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "loki" },
+          "editorMode": "code",
+          "expr": "{application=\"java-profile\"} | level =~ `$level` |= `$request_id` |= `$search`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

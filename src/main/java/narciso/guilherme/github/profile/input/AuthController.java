@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import narciso.guilherme.github.profile.core.service.JwtService;
 import narciso.guilherme.github.profile.input.dto.AuthResponse;
 import narciso.guilherme.github.profile.input.dto.LoginRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Auth", description = "Authentication")
 public class AuthController {
 
+  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
 
@@ -34,10 +38,12 @@ public class AuthController {
   @ApiResponse(responseCode = "200", description = "Authenticated successfully")
   @ApiResponse(responseCode = "401", description = "Invalid credentials")
   public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    log.info("Login attempt for email={}", request.email());
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
     String token = jwtService.generateToken(authentication.getName());
+    log.info("Login successful for email={}", request.email());
     return ResponseEntity.ok(new AuthResponse(token));
   }
 }

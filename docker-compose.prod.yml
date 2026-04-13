@@ -18,12 +18,11 @@ services:
       AWS_REGION: ${AWS_REGION}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      LOKI_URL: http://localhost:3100
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
       SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: 5
       SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE: 1
       SERVER_TOMCAT_THREADS_MAX: 30
-    volumes:
-      - ./logs:/app/logs
     depends_on:
       - postgres
       - redis
@@ -84,6 +83,17 @@ services:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
 
+  loki:
+    image: grafana/loki:3.4.2
+    restart: unless-stopped
+    network_mode: host
+    mem_limit: 256m
+    cpus: 0.3
+    volumes:
+      - ./docker/loki.yml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
   grafana:
     image: grafana/grafana:11.6.1
     restart: unless-stopped
@@ -96,13 +106,17 @@ services:
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
       GF_DATE_FORMATS_DEFAULT_TIMEZONE: UTC
       GF_LOCALE: en-US
+      LOKI_URL: http://localhost:3100
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
+      - loki
 
 volumes:
   postgres_data:
   redis_data:
   prometheus_data:
   grafana_data:
+  loki_data:

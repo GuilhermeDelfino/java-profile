@@ -1,5 +1,8 @@
 package narciso.guilherme.github.profile.core.vo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -10,6 +13,7 @@ public class Phone implements Serializable {
 
   private final String value;
 
+  @JsonCreator
   public Phone(String value) {
     String sanitized = sanitize(value);
     validate(sanitized);
@@ -26,6 +30,7 @@ public class Phone implements Serializable {
     }
   }
 
+  @JsonValue
   public String getValue() {
     return value;
   }

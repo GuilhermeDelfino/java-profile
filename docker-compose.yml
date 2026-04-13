@@ -24,17 +24,30 @@ services:
     volumes:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
 
+  loki:
+    image: grafana/loki:3.4.2
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./docker/loki.yml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
   grafana:
     image: grafana/grafana:11.6.1
     ports:
       - "3000:3000"
     environment:
       GF_SECURITY_ADMIN_PASSWORD: admin
+      LOKI_URL: http://loki:3100
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
+      - loki
 
 volumes:
   postgres_data:
   grafana_data:
+  loki_data:

@@ -25,10 +25,15 @@ import java.util.UUID;
 public class UserController {
 
   private final UserService userService;
+  private final UserQueryCacheService userQueryCacheService;
   private final PasswordEncoder passwordEncoder;
 
-  public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+  public UserController(
+      UserService userService,
+      UserQueryCacheService userQueryCacheService,
+      PasswordEncoder passwordEncoder) {
     this.userService = userService;
+    this.userQueryCacheService = userQueryCacheService;
     this.passwordEncoder = passwordEncoder;
   }
 
@@ -43,6 +48,7 @@ public class UserController {
         passwordEncoder.encode(dto.getPassword()),
         dto.getImage().getInputStream(), dto.getImage().getSize(),
         dto.getImage().getContentType());
+    userQueryCacheService.evictAll();
     var response = UserResponse.from(user);
     return ResponseEntity.created(URI.create("/users/" + response.id())).body(response);
   }
@@ -53,9 +59,8 @@ public class UserController {
   @ApiResponse(responseCode = "404", description = "User not found")
   @SecurityRequirement(name = "bearerAuth")
   public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
-    return userService
+    return userQueryCacheService
       .findById(id)
-      .map(UserResponse::from)
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
   }
@@ -67,7 +72,7 @@ public class UserController {
   public ResponseEntity<Collection<UserResponse>> findAll(
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "20") int size) {
-    List<UserResponse> list = userService.findAllPageable(page, size).stream().map(UserResponse::from).toList();
+    List<UserResponse> list = userQueryCacheService.findAll(page, size);
     return ResponseEntity.ok(list);
   }
 }
